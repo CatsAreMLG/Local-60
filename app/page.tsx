@@ -762,9 +762,14 @@ export default function Home() {
           <button className={`${styles.btn} ${styles.btnPrimary}`}>
             Volunteer for the program
           </button>
-          <button className={`${styles.btn} ${styles.btnGhost}`}>
-            Find your polling place
-          </button>
+          <a
+            rel="external noopener noreferrer"
+            href="https://www.bexar.org/2229/Voter-Registration-Check-Polling-Locatio"
+          >
+            <button className={`${styles.btn} ${styles.btnGhost}`}>
+              Find your polling place
+            </button>
+          </a>
         </div>
       </section>
 
@@ -826,7 +831,12 @@ export default function Home() {
                 <a href="#">Volunteer</a>
               </li>
               <li>
-                <a href="#">Find your polling place</a>
+                <a
+                  rel="external noopener noreferrer"
+                  href="https://www.bexar.org/2229/Voter-Registration-Check-Polling-Locatio"
+                >
+                  Find your polling place
+                </a>
               </li>
               <li>
                 <a href="#">Contact the coordinator</a>
