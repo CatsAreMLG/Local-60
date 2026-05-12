@@ -386,7 +386,7 @@ export default function Home() {
             behavior: "smooth",
             block: "start",
           }),
-        50
+        50,
       );
     }
   }, [openDetailId]);
@@ -400,7 +400,7 @@ export default function Home() {
             behavior: "smooth",
             block: "start",
           }),
-        50
+        50,
       );
     } else {
       setOpenDetailId(e.id);
@@ -412,7 +412,7 @@ export default function Home() {
     setTimeout(
       () =>
         gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
-      50
+      50,
     );
   };
 
@@ -785,8 +785,8 @@ export default function Home() {
               alt="IBEW Local 60 Logo"
             />
             <p>
-              Member-driven endorsements for races affecting working families in
-              Bexar County and across Texas.
+              Member-driven endorsements for races affecting electrical workers
+              and working families in Bexar County and across Texas.
             </p>
           </div>
           <div className={styles.footerCol}>
