@@ -262,10 +262,10 @@
   color: var(--ink);
   margin-top: auto;
   padding-top: 18px;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--red);
   position: relative;
 }
-.cardPull::before {
+/* .cardPull::before {
   content: "";
   position: absolute;
   top: -1px;
@@ -273,7 +273,7 @@
   width: 32px;
   height: 2px;
   background: var(--ink-mute);
-}
+} */
 .cardCta {
   font-size: 12px;
   font-weight: 600;

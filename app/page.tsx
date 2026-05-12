@@ -759,9 +759,11 @@ export default function Home() {
           to the polls. Close races are decided by who shows up.
         </p>
         <div className={styles.ctaButtons}>
-          <button className={`${styles.btn} ${styles.btnPrimary}`}>
-            Volunteer for the program
-          </button>
+          <a href="mailto:dale@ibewlu60.org">
+            <button className={`${styles.btn} ${styles.btnPrimary}`}>
+              Volunteer for the program
+            </button>
+          </a>
           <a
             rel="external noopener noreferrer"
             href="https://www.bexar.org/2229/Voter-Registration-Check-Polling-Locatio"
@@ -819,16 +821,13 @@ export default function Home() {
               <li>
                 <a href="#faq">FAQ</a>
               </li>
-              <li>
-                <a href="#">Committee minutes</a>
-              </li>
             </ul>
           </div>
           <div className={styles.footerCol}>
             <h4>Get involved</h4>
             <ul>
               <li>
-                <a href="#">Volunteer</a>
+                <a href="mailto:someone@example.com">Volunteer</a>
               </li>
               <li>
                 <a
@@ -839,16 +838,18 @@ export default function Home() {
                 </a>
               </li>
               <li>
-                <a href="#">Contact the coordinator</a>
+                <a href="mailto:someone@example.com">Contact the coordinator</a>
               </li>
               <li>
-                <a href="#">Member portal</a>
+                <a href="https://www.ibewlu60.org/" rel="external">
+                  Member portal
+                </a>
               </li>
             </ul>
           </div>
         </div>
         <div className={styles.footerBase}>
-          <div>© 2026 Local 60 · Paid for by Local 60 PAC</div>
+          <div>© 2026 Local 60 · Paid for by the IBEW Local 60 Union</div>
           <div>Made with input from members</div>
         </div>
       </footer>
