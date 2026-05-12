@@ -272,7 +272,7 @@
   left: 0;
   width: 32px;
   height: 2px;
-  background: var(--red);
+  background: var(--ink-mute);
 }
 .cardCta {
   font-size: 12px;
