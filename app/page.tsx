@@ -12,6 +12,18 @@ const HERO_QUERY = `*[
 _type == "hero"][0]
 { text }`;
 
+const PROCESS_QUERY = `*[
+_type == "process"][0]
+{ main, subtext }`;
+
+const PROCESS_STEPS_QUERY = `*[
+_type == "process-steps"] | order(_createdAt asc)
+{ _id, title, text }`;
+
+const CRITERIA_QUERY = `*[
+_type == "criteria"] | order(_createdAt asc)
+{ _id, title, text }`;
+
 const LABEL_QUERY = `*[
 _type == "label"]
 { _id, label, value }`;
@@ -24,31 +36,47 @@ const ENDORSEMENT_QUERY = `*[
 _type == "endorsement"]
 { _id, race, name, office, initials, pull, why, positions[]->{ _id, yes, position } }`;
 
-const faq_options = { next: { revalidate: 86400 } }; // every day
-const label_options = { next: { revalidate: 86400 } }; // every day
-const endorsement_options = { next: { revalidate: 3600 } }; // every hour
-const hero_options = { next: { revalidate: 86400 } }; // every day
+const FOOTER_QUERY = `*[
+_type == "footer"][0]
+{ text }`;
+
+const day_options = { next: { revalidate: 86400 } }; // every day
+const hour_options = { next: { revalidate: 3600 } }; // every hour
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [openDetailId, setOpenDetailId] = useState<string | null>(null);
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
   const [hero, setHero] = useState<SanityDocument | null>(null);
+  const [process, setProcess] = useState<SanityDocument | null>(null);
+  const [processSteps, setProcessSteps] = useState<SanityDocument[]>([]);
+  const [criteria, setCriteria] = useState<SanityDocument[]>([]);
   const [faqs, setFaqs] = useState<SanityDocument[]>([]);
   const [labels, setLabels] = useState<SanityDocument[]>([]);
   const [endorsements, setEndorsements] = useState<SanityDocument[]>([]);
+  const [footer, setFooter] = useState<SanityDocument | null>(null);
   const detailRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    client.fetch<SanityDocument>(HERO_QUERY, {}, hero_options).then(setHero);
-    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, faq_options).then(setFaqs);
+    client.fetch<SanityDocument>(HERO_QUERY, {}, day_options).then(setHero);
     client
-      .fetch<SanityDocument[]>(LABEL_QUERY, {}, label_options)
+      .fetch<SanityDocument>(PROCESS_QUERY, {}, day_options)
+      .then(setProcess);
+    client
+      .fetch<SanityDocument[]>(PROCESS_STEPS_QUERY, {}, day_options)
+      .then(setProcessSteps);
+    client
+      .fetch<SanityDocument[]>(CRITERIA_QUERY, {}, day_options)
+      .then(setCriteria);
+    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, day_options).then(setFaqs);
+    client
+      .fetch<SanityDocument[]>(LABEL_QUERY, {}, day_options)
       .then(setLabels);
     client
-      .fetch<SanityDocument[]>(ENDORSEMENT_QUERY, {}, endorsement_options)
+      .fetch<SanityDocument[]>(ENDORSEMENT_QUERY, {}, hour_options)
       .then(setEndorsements);
+    client.fetch<SanityDocument>(FOOTER_QUERY, {}, day_options).then(setFooter);
   }, []);
 
   const filtered =
@@ -260,12 +288,7 @@ export default function Home() {
               <br />
               endorsement <em>happens</em>.
             </h2>
-            <p>
-              Every endorsement on this page went through the same five-step
-              process. No backroom deals, no top-down picks. The political
-              committee is elected by you, and the final slate is ratified by
-              the membership at general meeting.
-            </p>
+            <p>{process && process.main}</p>
             <p
               style={{
                 fontSize: "15px",
@@ -273,68 +296,19 @@ export default function Home() {
                 fontStyle: "italic",
               }}
             >
-              Members in good standing can observe any committee meeting and
-              submit testimony on any race under consideration.
+              {process && process.subtext}
             </p>
           </div>
           <div className={styles.processSteps}>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>01</div>
-              <div>
-                <h4>Questionnaire</h4>
-                <p>
-                  Every candidate in a race we may endorse receives a
-                  14-question survey covering labor priorities: right-to-work,
-                  prevailing wage, NLRB process, paid leave, healthcare access,
-                  and housing supply. Responses are public.
-                </p>
+            {processSteps.map((step, i) => (
+              <div className={styles.step} key={step._id}>
+                <div className={styles.stepNum}>0{i + 1}</div>
+                <div>
+                  <h4>{step.title}</h4>
+                  <p>{step.text}</p>
+                </div>
               </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>02</div>
-              <div>
-                <h4>Voting record review</h4>
-                <p>
-                  For incumbents, we score every roll call vote on
-                  labor-relevant legislation since the last endorsement cycle.
-                  Scoring rubric is published before review begins.
-                </p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>03</div>
-              <div>
-                <h4>Member interview</h4>
-                <p>
-                  Top candidates by questionnaire and record are invited for an
-                  in-person interview with the political committee. Members can
-                  submit questions in advance through the local&apos;s portal.
-                </p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>04</div>
-              <div>
-                <h4>Committee recommendation</h4>
-                <p>
-                  The nine-member political committee, elected by membership for
-                  two-year terms, votes on each endorsement. A two-thirds
-                  majority is required. Dissents are recorded.
-                </p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>05</div>
-              <div>
-                <h4>Member ratification</h4>
-                <p>
-                  The full slate is presented to the membership at general
-                  meeting. A majority vote of members in attendance ratifies,
-                  modifies, or rejects each recommendation. The slate published
-                  here reflects what members ratified.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -345,61 +319,13 @@ export default function Home() {
           <div className={styles.meta}>Five non-negotiables</div>
         </div>
         <div className={styles.criteriaGrid}>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>01</div>
-            <h4>Labor rights</h4>
-            <p>
-              Position on right-to-work, prevailing wage, project labor
-              agreements, NLRB process protections, fair scheduling, and the
-              ability of workers to organize without retaliation. This is the
-              floor.
-            </p>
-          </div>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>02</div>
-            <h4>Wages and benefits</h4>
-            <p>
-              Stance on minimum wage, overtime protections, paid family and
-              medical leave, and worker access to affordable healthcare
-              independent of employer.
-            </p>
-          </div>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>03</div>
-            <h4>Cost of living</h4>
-            <p>
-              Concrete commitments on housing supply, transit access, childcare
-              affordability, and energy costs. We back candidates who treat the
-              affordability crisis as a labor issue.
-            </p>
-          </div>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>04</div>
-            <h4>Public services</h4>
-            <p>
-              Public education funding, Medicaid expansion, public sector worker
-              rights, and protection of the social safety net our members depend
-              on.
-            </p>
-          </div>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>05</div>
-            <h4>Track record</h4>
-            <p>
-              Have they kept past commitments? Do they answer member calls? An
-              endorsement is a relationship. We back candidates who show up
-              after the election, not just before it.
-            </p>
-          </div>
-          <div className={styles.criterion}>
-            <div className={styles.criterionNum}>+</div>
-            <h4>One more thing</h4>
-            <p>
-              No candidate is perfect on every issue. We endorse the best
-              available choice in each race, weighted by the criteria above.
-              Where no candidate clears the bar, we make no endorsement.
-            </p>
-          </div>
+          {criteria.map((c, i) => (
+            <div className={styles.criterion} key={c._id}>
+              <div className={styles.criterionNum}>0{i + 1}</div>
+              <h4>{c.title}</h4>
+              <p>{c.text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -464,10 +390,7 @@ export default function Home() {
               height={57}
               alt="IBEW Local 60 Logo"
             />
-            <p>
-              Member-driven endorsements for races affecting electrical workers
-              and working families in Bexar County and across Texas.
-            </p>
+            <p>{footer && footer.text}</p>
           </div>
           <div className={styles.footerCol}>
             <h4>The slate</h4>
