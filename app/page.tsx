@@ -2,6 +2,10 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+
+import { type SanityDocument } from "next-sanity";
+import { client } from "@/sanity/client";
+
 import styles from "./page.module.css";
 
 interface Position {
@@ -337,39 +341,23 @@ const FILTERS = [
   { label: "Bexar County", value: "county" },
 ];
 
-const FAQ_ITEMS = [
-  {
-    q: "Why did you endorse a candidate I disagree with?",
-    a: "No candidate is perfect. The political committee weighs each candidate against the five criteria, against their opponent, and against the realistic alternatives in the race. An endorsement is not an unconditional embrace of every position a candidate holds, it's a judgment that backing them produces better outcomes for working families than the alternative. If you disagree, the process exists for you to weigh in, bring your case to the committee at any open meeting, or to the next general meeting before ratification.",
-  },
-  {
-    q: "Why didn't you endorse anyone in race X?",
-    a: "When no candidate in a race clears the criteria above, we make no endorsement rather than back someone who would actively undermine the local's interests. A non-endorsement is a deliberate choice, not an oversight. The committee documents its reasoning in the meeting minutes, available to any member on request.",
-  },
-  {
-    q: "Can members override an endorsement?",
-    a: "Yes. The political committee makes a recommendation; the membership ratifies, modifies, or rejects it. At the ratification meeting, any member in good standing can move to strike or substitute an endorsement. The motion needs a second and a majority of members present.",
-  },
-  {
-    q: "What happens if a candidate breaks promises after winning?",
-    a: "An endorsement is a beginning, not an end. The committee tracks every endorsed official's votes and public actions throughout their term. Significant departures from commitments made during endorsement trigger a member-facing accountability report and may result in non-endorsement or active opposition in the next cycle. Members are notified directly when an endorsed official takes a position contrary to the local's stated priorities.",
-  },
-  {
-    q: "How do I get involved beyond voting?",
-    a: "The political program runs on member volunteers. We need canvassers, phonebankers, drivers, sign-walkers, and people who'll talk to their coworkers. Sign up below or text the political coordinator. Even an hour a week, multiplied across the local, decides close races.",
-  },
-  {
-    q: "How do I get on the political committee?",
-    a: "Committee members are elected to two-year terms by the membership. Elections happen every odd year at the spring general meeting. Any member in good standing for at least 12 months can run. Nominations open 60 days before the meeting. The next election is fall 2027.",
-  },
-];
+const FAQ_QUERY = `*[
+_type == "faq"]
+{ _id, question, answer }`;
+
+const faq_options = { next: { revalidate: 86400 } }; // every day
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [openDetailId, setOpenDetailId] = useState<number | null>(null);
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
+  const [faqs, setFaqs] = useState<SanityDocument[]>([]);
   const detailRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, faq_options).then(setFaqs);
+  }, []);
 
   const filtered =
     activeFilter === "all"
@@ -731,19 +719,19 @@ export default function Home() {
               Got <em>questions?</em>
             </h2>
           </div>
-          {FAQ_ITEMS.map((item, i) => (
+          {faqs.map((faq, i) => (
             <div
-              key={i}
+              key={faq._id}
               className={`${styles.faqItem}${
                 openFaqs.has(i) ? ` ${styles.open}` : ""
               }`}
             >
               <button className={styles.faqQ} onClick={() => toggleFaq(i)}>
-                {item.q}
+                {faq.question}
                 <span className={styles.faqToggle}>+</span>
               </button>
               <div className={styles.faqA}>
-                <div className={styles.faqAInner}>{item.a}</div>
+                <div className={styles.faqAInner}>{faq.answer}</div>
               </div>
             </div>
           ))}
