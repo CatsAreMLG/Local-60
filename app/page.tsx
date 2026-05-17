@@ -506,7 +506,7 @@ export default function Home() {
             <h4>Get involved</h4>
             <ul>
               <li>
-                <a href="mailto:someone@example.com">Volunteer</a>
+                <a href="mailto:dale@ibewlu60.org">Volunteer</a>
               </li>
               <li>
                 <a
@@ -517,7 +517,7 @@ export default function Home() {
                 </a>
               </li>
               <li>
-                <a href="mailto:someone@example.com">Contact the coordinator</a>
+                <a href="mailto:dale@ibewlu60.org">Contact the coordinator</a>
               </li>
               <li>
                 <a href="https://www.ibewlu60.org/" rel="external">
