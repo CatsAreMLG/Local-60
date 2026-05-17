@@ -8,6 +8,10 @@ import { client } from "@/sanity/client";
 
 import styles from "./page.module.css";
 
+const HERO_QUERY = `*[
+_type == "hero"][0]
+{ text }`;
+
 const LABEL_QUERY = `*[
 _type == "label"]
 { _id, label, value }`;
@@ -23,11 +27,13 @@ _type == "endorsement"]
 const faq_options = { next: { revalidate: 86400 } }; // every day
 const label_options = { next: { revalidate: 86400 } }; // every day
 const endorsement_options = { next: { revalidate: 3600 } }; // every hour
+const hero_options = { next: { revalidate: 86400 } }; // every day
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [openDetailId, setOpenDetailId] = useState<string | null>(null);
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
+  const [hero, setHero] = useState<SanityDocument | null>(null);
   const [faqs, setFaqs] = useState<SanityDocument[]>([]);
   const [labels, setLabels] = useState<SanityDocument[]>([]);
   const [endorsements, setEndorsements] = useState<SanityDocument[]>([]);
@@ -35,6 +41,7 @@ export default function Home() {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    client.fetch<SanityDocument>(HERO_QUERY, {}, hero_options).then(setHero);
     client.fetch<SanityDocument[]>(FAQ_QUERY, {}, faq_options).then(setFaqs);
     client
       .fetch<SanityDocument[]>(LABEL_QUERY, {}, label_options)
@@ -137,13 +144,7 @@ export default function Home() {
             <br />
             and <em>why</em>.
           </h1>
-          <p className={styles.heroLede}>
-            Twenty-six races. Twenty-eight endorsements. All vetted by IBEW
-            Local 60 members on the issues that determine whether working
-            families in San Antonio and across Texas get a fair shake: wages,
-            healthcare, housing, the right to organize. Read the reasoning
-            behind each one.
-          </p>
+          <p className={styles.heroLede}>{hero && hero.text}</p>
         </div>
         <div className={styles.heroSide}>
           <div className={styles.heroStat}>
