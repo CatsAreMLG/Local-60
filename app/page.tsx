@@ -34,7 +34,7 @@ _type == "faq"]
 
 const ENDORSEMENT_QUERY = `*[
 _type == "endorsement"]
-{ _id, race, name, office, initials, pull, why, positions[]->{ _id, yes, position } }`;
+{ _id, tier[0]->{ _id, label, value }, race, name, office, initials, pull, why, positions[]->{ _id, yes, position } }`;
 
 const FOOTER_QUERY = `*[
 _type == "footer"][0]
@@ -82,7 +82,7 @@ export default function Home() {
   const filtered =
     activeFilter === "all"
       ? endorsements
-      : endorsements.filter((e) => e.tier === activeFilter);
+      : endorsements.filter((e) => e.tier.value === activeFilter);
 
   const openDetail = endorsements.find((e) => e._id === openDetailId) ?? null;
 
