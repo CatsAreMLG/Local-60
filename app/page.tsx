@@ -1,12 +1,10 @@
-"use client";
-
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-
 import { type SanityDocument } from "next-sanity";
 import { client } from "@/sanity/client";
 
 import styles from "./page.module.css";
+import EndorsementsSection from "./EndorsementsSection";
+import FaqSection from "./FaqSection";
 
 const HERO_QUERY = `*[
 _type == "hero"][0]
@@ -43,95 +41,26 @@ _type == "footer"][0]
 const day_options = { next: { revalidate: 86400 } }; // every day
 const hour_options = { next: { revalidate: 3600 } }; // every hour
 
-export default function Home() {
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [openDetailId, setOpenDetailId] = useState<string | null>(null);
-  const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
-  const [hero, setHero] = useState<SanityDocument | null>(null);
-  const [process, setProcess] = useState<SanityDocument | null>(null);
-  const [processSteps, setProcessSteps] = useState<SanityDocument[]>([]);
-  const [criteria, setCriteria] = useState<SanityDocument[]>([]);
-  const [faqs, setFaqs] = useState<SanityDocument[]>([]);
-  const [labels, setLabels] = useState<SanityDocument[]>([]);
-  const [endorsements, setEndorsements] = useState<SanityDocument[]>([]);
-  const [footer, setFooter] = useState<SanityDocument | null>(null);
-  const detailRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    client.fetch<SanityDocument>(HERO_QUERY, {}, day_options).then(setHero);
-    client
-      .fetch<SanityDocument>(PROCESS_QUERY, {}, day_options)
-      .then(setProcess);
-    client
-      .fetch<SanityDocument[]>(PROCESS_STEPS_QUERY, {}, day_options)
-      .then(setProcessSteps);
-    client
-      .fetch<SanityDocument[]>(CRITERIA_QUERY, {}, day_options)
-      .then(setCriteria);
-    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, day_options).then(setFaqs);
-    client
-      .fetch<SanityDocument[]>(LABEL_QUERY, {}, day_options)
-      .then(setLabels);
-    client
-      .fetch<SanityDocument[]>(ENDORSEMENT_QUERY, {}, hour_options)
-      .then(setEndorsements);
-    client.fetch<SanityDocument>(FOOTER_QUERY, {}, day_options).then(setFooter);
-  }, []);
-
-  const filtered =
-    activeFilter === "all"
-      ? endorsements
-      : endorsements.filter((e) => e.tier.value === activeFilter);
-
-  const openDetail = endorsements.find((e) => e._id === openDetailId) ?? null;
-
-  useEffect(() => {
-    if (openDetailId !== null) {
-      setTimeout(
-        () =>
-          detailRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          }),
-        50,
-      );
-    }
-  }, [openDetailId]);
-
-  const handleCardClick = (e: SanityDocument) => {
-    if (openDetailId === e._id) {
-      setOpenDetailId(null);
-      setTimeout(
-        () =>
-          gridRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          }),
-        50,
-      );
-    } else {
-      setOpenDetailId(e._id);
-    }
-  };
-
-  const handleCloseDetail = () => {
-    setOpenDetailId(null);
-    setTimeout(
-      () =>
-        gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
-      50,
-    );
-  };
-
-  const toggleFaq = (index: number) => {
-    setOpenFaqs((prev) => {
-      const next = new Set(prev);
-      if (next.has(index)) next.delete(index);
-      else next.add(index);
-      return next;
-    });
-  };
+export default async function Home() {
+  const [
+    hero,
+    process,
+    processSteps,
+    criteria,
+    faqs,
+    labels,
+    endorsements,
+    footer,
+  ] = await Promise.all([
+    client.fetch<SanityDocument>(HERO_QUERY, {}, day_options),
+    client.fetch<SanityDocument>(PROCESS_QUERY, {}, day_options),
+    client.fetch<SanityDocument[]>(PROCESS_STEPS_QUERY, {}, day_options),
+    client.fetch<SanityDocument[]>(CRITERIA_QUERY, {}, day_options),
+    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, day_options),
+    client.fetch<SanityDocument[]>(LABEL_QUERY, {}, day_options),
+    client.fetch<SanityDocument[]>(ENDORSEMENT_QUERY, {}, hour_options),
+    client.fetch<SanityDocument>(FOOTER_QUERY, {}, day_options),
+  ]);
 
   return (
     <>
@@ -199,86 +128,7 @@ export default function Home() {
         <div className={styles.meta}>26 races · ratified Apr 2026</div>
       </div>
 
-      <div className={styles.filters}>
-        {labels.map((label) => (
-          <button
-            key={label._id}
-            className={`${styles.filterChip}${
-              activeFilter === label.value ? ` ${styles.active}` : ""
-            }`}
-            onClick={() => {
-              setActiveFilter(label.value);
-              setOpenDetailId(null);
-            }}
-          >
-            {label.label}
-          </button>
-        ))}
-      </div>
-
-      <div className={styles.grid} id="grid" ref={gridRef}>
-        {filtered.map((e) => (
-          <div
-            key={e._id}
-            className={styles.card}
-            onClick={() => handleCardClick(e)}
-          >
-            <div className={styles.cardTier}>{e.tierLabel}</div>
-            <div className={styles.cardName}>{e.name}</div>
-            <div className={styles.cardOffice}>{e.office}</div>
-            <div className={styles.cardPull}>&ldquo;{e.pull}&rdquo;</div>
-            <div className={styles.cardCta}>
-              Read full reasoning <span className={styles.cardCtaArrow}>→</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {openDetail && (
-        <section className={styles.detail} ref={detailRef}>
-          <div className={styles.detailInner}>
-            <div className={styles.detailPhoto}>{openDetail.initials}</div>
-            <div>
-              <div className={styles.detailTier}>{openDetail.tierLabel}</div>
-              <h3>{openDetail.name}</h3>
-              <div className={styles.detailOffice}>{openDetail.office}</div>
-              <div className={styles.detailSection}>
-                <h4>Why we endorsed</h4>
-                <p>{openDetail.why}</p>
-              </div>
-              <div className={styles.detailSection}>
-                <h4>Positions on key issues</h4>
-                <div className={styles.detailPositions}>
-                  {(
-                    openDetail.positions as {
-                      _id: string;
-                      yes: boolean;
-                      position: string;
-                    }[]
-                  ).map((p) => (
-                    <div key={p._id} className={styles.detailPosition}>
-                      <span
-                        className={`${styles.posMark}${
-                          p.yes ? "" : ` ${styles.no}`
-                        }`}
-                      >
-                        {p.yes ? "✓" : "✗"}
-                      </span>
-                      <span>{p.position}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <button
-                className={styles.detailClose}
-                onClick={handleCloseDetail}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
+      <EndorsementsSection labels={labels} endorsements={endorsements} />
 
       <section className={styles.process} id="process">
         <div className={styles.processInner}>
@@ -329,32 +179,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.faq} id="faq">
-        <div className={styles.faqInner}>
-          <div className={styles.faqHead}>
-            <div className={styles.eyebrow}>Frequently asked questions</div>
-            <h2>
-              Got <em>questions?</em>
-            </h2>
-          </div>
-          {faqs.map((faq, i) => (
-            <div
-              key={faq._id}
-              className={`${styles.faqItem}${
-                openFaqs.has(i) ? ` ${styles.open}` : ""
-              }`}
-            >
-              <button className={styles.faqQ} onClick={() => toggleFaq(i)}>
-                {faq.question}
-                <span className={styles.faqToggle}>+</span>
-              </button>
-              <div className={styles.faqA}>
-                <div className={styles.faqAInner}>{faq.answer}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <FaqSection faqs={faqs} />
 
       <section className={styles.ctaStrip} id="act">
         <h2>
