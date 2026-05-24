@@ -77,6 +77,7 @@ export default async function Home() {
               width={160}
               height={57}
               alt="IBEW Local 60 Logo"
+              priority
             />
           </div>
           <nav className={styles.nav}>

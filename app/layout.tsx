@@ -1,5 +1,25 @@
 import type { Metadata } from "next";
+import { Big_Shoulders, Newsreader, Public_Sans } from "next/font/google";
 import "./globals.css";
+
+const bigShoulders = Big_Shoulders({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--display",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  variable: "--serif",
+});
+
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--sans",
+});
 
 export const metadata: Metadata = {
   title: "IBEW LU60 Endorsements",
@@ -13,19 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>{children}</body>
+      <body
+        className={`${bigShoulders.variable} ${newsreader.variable} ${publicSans.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
