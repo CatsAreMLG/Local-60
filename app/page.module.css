@@ -459,7 +459,7 @@
   color: var(--red);
   line-height: 1;
 }
-.step h4 {
+.step h3 {
   font-family: var(--display);
   font-weight: 700;
   font-size: 22px;
@@ -518,7 +518,7 @@
   margin-bottom: 6px;
   letter-spacing: 0.04em;
 }
-.criterion h4 {
+.criterion h3 {
   font-family: var(--display);
   font-weight: 700;
   font-size: 24px;
@@ -721,7 +721,7 @@
   max-width: 320px;
   margin-top: 16px;
 }
-.footerCol h4 {
+.footerCol h3 {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 600;
@@ -750,7 +750,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #7a736b;
+  color: #c9bfb0;
 }
 
 /* Mobile */

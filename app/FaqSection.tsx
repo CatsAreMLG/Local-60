@@ -17,11 +17,11 @@ export default function FaqSection({ faqs }: { faqs: SanityDocument[] }) {
   };
 
   return (
-    <section className={styles.faq} id="faq">
+    <section className={styles.faq} id="faq" aria-labelledby="faq-heading">
       <div className={styles.faqInner}>
         <div className={styles.faqHead}>
           <div className={styles.eyebrow}>Frequently asked questions</div>
-          <h2>
+          <h2 id="faq-heading">
             Got <em>questions?</em>
           </h2>
         </div>

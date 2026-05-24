@@ -80,7 +80,7 @@ export default async function Home() {
               priority
             />
           </div>
-          <nav className={styles.nav}>
+          <nav className={styles.nav} aria-label="Main navigation">
             <a href="#endorsements">Endorsements</a>
             <a href="#process">Our process</a>
             <a href="#criteria">Criteria</a>
@@ -92,10 +92,12 @@ export default async function Home() {
         </div>
       </header>
 
-      <section className={styles.hero}>
+      <main>
+
+      <section className={styles.hero} aria-labelledby="hero-heading">
         <div>
           <div className={styles.heroEyebrow}>2026 General election</div>
-          <h1>
+          <h1 id="hero-heading">
             Who we&apos;re
             <br />
             backing
@@ -131,10 +133,10 @@ export default async function Home() {
 
       <EndorsementsSection labels={labels} endorsements={endorsements} />
 
-      <section className={styles.process} id="process">
+      <section className={styles.process} id="process" aria-labelledby="process-heading">
         <div className={styles.processInner}>
           <div className={styles.processSide}>
-            <h2>
+            <h2 id="process-heading">
               How an
               <br />
               endorsement <em>happens</em>.
@@ -155,7 +157,7 @@ export default async function Home() {
               <div className={styles.step} key={step._id}>
                 <div className={styles.stepNum}>0{i + 1}</div>
                 <div>
-                  <h4>{step.title}</h4>
+                  <h3>{step.title}</h3>
                   <p>{step.text}</p>
                 </div>
               </div>
@@ -164,16 +166,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className={styles.criteria} id="criteria">
+      <section className={styles.criteria} id="criteria" aria-labelledby="criteria-heading">
         <div className={styles.criteriaHead}>
-          <h2>What we look for</h2>
+          <h2 id="criteria-heading">What we look for</h2>
           <div className={styles.meta}>Five non-negotiables</div>
         </div>
         <div className={styles.criteriaGrid}>
           {criteria.map((c, i) => (
             <div className={styles.criterion} key={c._id}>
               <div className={styles.criterionNum}>0{i + 1}</div>
-              <h4>{c.title}</h4>
+              <h3>{c.title}</h3>
               <p>{c.text}</p>
             </div>
           ))}
@@ -182,8 +184,8 @@ export default async function Home() {
 
       <FaqSection faqs={faqs} />
 
-      <section className={styles.ctaStrip} id="act">
-        <h2>
+      <section className={styles.ctaStrip} id="act" aria-labelledby="act-heading">
+        <h2 id="act-heading">
           The slate is the start. <em>Turnout finishes the job.</em>
         </h2>
         <p>
@@ -207,6 +209,8 @@ export default async function Home() {
         </div>
       </section>
 
+      </main>
+
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
@@ -219,7 +223,7 @@ export default async function Home() {
             <p>{footer && footer.text}</p>
           </div>
           <div className={styles.footerCol}>
-            <h4>The slate</h4>
+            <h3>The slate</h3>
             <ul>
               <li>
                 <a href="#endorsements">All endorsements</a>
@@ -239,7 +243,7 @@ export default async function Home() {
             </ul>
           </div>
           <div className={styles.footerCol}>
-            <h4>The process</h4>
+            <h3>The process</h3>
             <ul>
               <li>
                 <a href="#process">How endorsements happen</a>
@@ -253,7 +257,7 @@ export default async function Home() {
             </ul>
           </div>
           <div className={styles.footerCol}>
-            <h4>Get involved</h4>
+            <h3>Get involved</h3>
             <ul>
               <li>
                 <a href="mailto:dale@ibewlu60.org">Volunteer</a>
