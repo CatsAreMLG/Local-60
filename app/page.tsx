@@ -1,74 +1,22 @@
 import Image from "next/image";
-import { type SanityDocument } from "next-sanity";
-import { client } from "@/sanity/client";
+import {
+  hero,
+  process,
+  processSteps,
+  criteria,
+  faqs,
+  labels,
+  endorsements,
+  footer,
+} from "@/lib/sanity";
 
 import styles from "./page.module.css";
 import EndorsementsSection from "./EndorsementsSection";
 import FaqSection from "./FaqSection";
 
-const HERO_QUERY = `*[
-_type == "hero"][0]
-{ text }`;
-
-const PROCESS_QUERY = `*[
-_type == "process"][0]
-{ main, subtext }`;
-
-const PROCESS_STEPS_QUERY = `*[
-_type == "process-steps"] | order(_createdAt asc)
-{ _id, title, text }`;
-
-const CRITERIA_QUERY = `*[
-_type == "criteria"] | order(_createdAt asc)
-{ _id, title, text }`;
-
-const LABEL_QUERY = `*[
-_type == "label"]
-{ _id, label, value }`;
-
-const FAQ_QUERY = `*[
-_type == "faq"]
-{ _id, question, answer }`;
-
-const ENDORSEMENT_QUERY = `*[
-_type == "endorsement"]
-{ _id, tier[0]->{ _id, label, value }, race, name, office, initials, pull, why, positions[]->{ _id, yes, position } }`;
-
-const FOOTER_QUERY = `*[
-_type == "footer"][0]
-{ text }`;
-
-const day_options = { next: { revalidate: 86400 } }; // every day
-const hour_options = { next: { revalidate: 3600 } }; // every hour
-
 export default async function Home() {
-  const [
-    hero,
-    process,
-    processSteps,
-    criteria,
-    faqs,
-    labels,
-    endorsements,
-    footer,
-  ] = await Promise.all([
-    client.fetch<SanityDocument>(HERO_QUERY, {}, day_options),
-    client.fetch<SanityDocument>(PROCESS_QUERY, {}, day_options),
-    client.fetch<SanityDocument[]>(PROCESS_STEPS_QUERY, {}, day_options),
-    client.fetch<SanityDocument[]>(CRITERIA_QUERY, {}, day_options),
-    client.fetch<SanityDocument[]>(FAQ_QUERY, {}, day_options),
-    client.fetch<SanityDocument[]>(LABEL_QUERY, {}, day_options),
-    client.fetch<SanityDocument[]>(ENDORSEMENT_QUERY, {}, hour_options),
-    client.fetch<SanityDocument>(FOOTER_QUERY, {}, day_options),
-  ]);
-
   return (
     <>
-      <div className={styles.demoBanner}>
-        <span>●</span> Demo prototype: sample content for proposal review, not
-        actual endorsements
-      </div>
-
       <header className={styles.topbar}>
         <div className={styles.topbarInner}>
           <div className={styles.brand}>
@@ -103,7 +51,7 @@ export default async function Home() {
               <br />
               and <em>why</em>.
             </h1>
-            <p className={styles.heroLede}>{hero && hero.text}</p>
+            <p className={styles.heroLede}>{hero?.text}</p>
           </div>
           <div className={styles.heroSide}>
             <div className={styles.heroStat}>
@@ -144,7 +92,7 @@ export default async function Home() {
                 <br />
                 endorsement <em>happens</em>.
               </h2>
-              <p>{process && process.main}</p>
+              <p>{process?.main}</p>
               <p
                 style={{
                   fontSize: "15px",
@@ -152,7 +100,7 @@ export default async function Home() {
                   fontStyle: "italic",
                 }}
               >
-                {process && process.subtext}
+                {process?.subtext}
               </p>
             </div>
             <div className={styles.processSteps}>
@@ -230,7 +178,7 @@ export default async function Home() {
               height={57}
               alt="IBEW Local 60 Logo"
             />
-            <p>{footer && footer.text}</p>
+            <p>{footer?.text}</p>
           </div>
           <div className={styles.footerCol}>
             <h3>The slate</h3>

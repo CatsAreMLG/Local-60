@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { type SanityDocument } from "next-sanity";
+import { type Label, type Endorsement } from "@/lib/sanity";
 import styles from "./page.module.css";
 
 export default function EndorsementsSection({
   labels,
   endorsements,
 }: {
-  labels: SanityDocument[];
-  endorsements: SanityDocument[];
+  labels: Label[];
+  endorsements: Endorsement[];
 }) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [openDetailId, setOpenDetailId] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function EndorsementsSection({
     }
   }, [openDetailId]);
 
-  const handleCardClick = (e: SanityDocument) => {
+  const handleCardClick = (e: Endorsement) => {
     if (openDetailId === e._id) {
       setOpenDetailId(null);
       setTimeout(
@@ -87,7 +87,7 @@ export default function EndorsementsSection({
             className={styles.card}
             onClick={() => handleCardClick(e)}
           >
-            <div className={styles.cardTier}>{e.tierLabel}</div>
+            <div className={styles.cardTier}>{e.tier?.label}</div>
             <div className={styles.cardName}>{e.name}</div>
             <div className={styles.cardOffice}>{e.office}</div>
             <div className={styles.cardPull}>&ldquo;{e.pull}&rdquo;</div>
@@ -103,7 +103,7 @@ export default function EndorsementsSection({
           <div className={styles.detailInner}>
             <div className={styles.detailPhoto}>{openDetail.initials}</div>
             <div>
-              <div className={styles.detailTier}>{openDetail.tierLabel}</div>
+              <div className={styles.detailTier}>{openDetail.tier?.label}</div>
               <h3>{openDetail.name}</h3>
               <div className={styles.detailOffice}>{openDetail.office}</div>
               <div className={styles.detailSection}>

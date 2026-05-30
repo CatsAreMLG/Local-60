@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SanityLive } from "@/sanity/live";
 import { Big_Shoulders, Newsreader, Public_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -6,6 +7,7 @@ const bigShoulders = Big_Shoulders({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--display",
+  adjustFontFallback: false,
 });
 
 const newsreader = Newsreader({
@@ -37,6 +39,7 @@ export default function RootLayout({
         className={`${bigShoulders.variable} ${newsreader.variable} ${publicSans.variable}`}
       >
         {children}
+        <SanityLive />
       </body>
     </html>
   );

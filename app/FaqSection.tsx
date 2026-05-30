@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { type SanityDocument } from "next-sanity";
+import { type Faq } from "@/lib/sanity";
 import styles from "./page.module.css";
 
-export default function FaqSection({ faqs }: { faqs: SanityDocument[] }) {
+export default function FaqSection({ faqs }: { faqs: Faq[] }) {
   const [openFaqs, setOpenFaqs] = useState<Set<number>>(new Set());
 
   const toggleFaq = (index: number) => {
