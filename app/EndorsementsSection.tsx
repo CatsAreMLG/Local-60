@@ -64,8 +64,6 @@ export default function EndorsementsSection({
     );
   };
 
-  console.log(openDetail);
-
   return (
     <>
       <div className={styles.filters}>
