@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { type Label, type Endorsement } from "@/lib/sanity";
+import { urlFor } from "@/lib/urlFor";
 
 import styles from "./page.module.css";
 
@@ -108,7 +109,7 @@ export default function EndorsementsSection({
             <div className={styles.detailPhoto}>
               {openDetail.portrait ? (
                 <Image
-                  src={openDetail.portrait.url}
+                  src={urlFor(openDetail.portrait).width(200).height(240).url()}
                   alt="Picture of the candidate"
                   width={200}
                   height={240}
