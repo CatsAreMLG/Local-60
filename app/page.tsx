@@ -36,11 +36,15 @@ export default async function Home() {
   ] = await Promise.all([
     sanityFetch({ query: HERO_QUERY }).then((r) => r.data as Hero | null),
     sanityFetch({ query: PROCESS_QUERY }).then((r) => r.data as Process | null),
-    sanityFetch({ query: PROCESS_STEPS_QUERY }).then((r) => r.data as ProcessStep[]),
+    sanityFetch({ query: PROCESS_STEPS_QUERY }).then(
+      (r) => r.data as ProcessStep[],
+    ),
     sanityFetch({ query: CRITERIA_QUERY }).then((r) => r.data as Criterion[]),
     sanityFetch({ query: FAQ_QUERY }).then((r) => r.data as Faq[]),
     sanityFetch({ query: LABEL_QUERY }).then((r) => r.data as Label[]),
-    sanityFetch({ query: ENDORSEMENT_QUERY }).then((r) => r.data as Endorsement[]),
+    sanityFetch({ query: ENDORSEMENT_QUERY }).then(
+      (r) => r.data as Endorsement[],
+    ),
     sanityFetch({ query: FOOTER_QUERY }).then((r) => r.data as Footer | null),
   ]);
   return (
@@ -87,8 +91,8 @@ export default async function Home() {
               <div className={styles.heroStatLabel}>Races on the slate</div>
             </div>
             <div className={styles.heroStat}>
-              <div className={styles.heroStatNum}>9</div>
-              <div className={styles.heroStatLabel}>Member committee</div>
+              <div className={styles.heroStatNum}>Oct 19</div>
+              <div className={styles.heroStatLabel}>Early Voting</div>
             </div>
             <div className={styles.heroStat}>
               <div className={styles.heroStatNum}>3,113</div>
