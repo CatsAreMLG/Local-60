@@ -4,7 +4,7 @@ export const PROCESS_STEPS_QUERY = `*[_type == "process-steps"] | order(_created
 export const CRITERIA_QUERY = `*[_type == "criteria"] | order(_createdAt asc){ _id, title, text }`;
 export const LABEL_QUERY = `*[_type == "label"]{ _id, label, value }`;
 export const FAQ_QUERY = `*[_type == "faq"]{ _id, question, answer }`;
-export const ENDORSEMENT_QUERY = `*[_type == "endorsement"]{ _id, tier[0]->{ _id, label, value }, race, name, office, initials, pull, why, positions[]->{ _id, yes, position } }`;
+export const ENDORSEMENT_QUERY = `*[_type == "endorsement"]{ _id, tier[0]->{ _id, label, value }, portrait, race, name, office, initials, pull, why, endorsed, positions[]->{ _id, yes, position } }`;
 export const FOOTER_QUERY = `*[_type == "footer"][0]{ text }`;
 
 export type Hero = { text: string };

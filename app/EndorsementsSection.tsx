@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import { type Label, type Endorsement } from "@/lib/sanity";
 
 import styles from "./page.module.css";
-import defaultPortrait from "@/public/default.png";
 
 export default function EndorsementsSection({
   labels,
@@ -63,6 +62,8 @@ export default function EndorsementsSection({
       50,
     );
   };
+
+  console.log(openDetail);
 
   return (
     <>
