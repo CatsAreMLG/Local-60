@@ -1,20 +1,48 @@
 import Image from "next/image";
 import {
-  hero,
-  process,
-  processSteps,
-  criteria,
-  faqs,
-  labels,
-  endorsements,
-  footer,
+  HERO_QUERY,
+  PROCESS_QUERY,
+  PROCESS_STEPS_QUERY,
+  CRITERIA_QUERY,
+  LABEL_QUERY,
+  FAQ_QUERY,
+  ENDORSEMENT_QUERY,
+  FOOTER_QUERY,
+  type Hero,
+  type Process,
+  type ProcessStep,
+  type Criterion,
+  type Label,
+  type Faq,
+  type Endorsement,
+  type Footer,
 } from "@/lib/sanity";
+import { sanityFetch } from "@/sanity/live";
 
 import styles from "./page.module.css";
 import EndorsementsSection from "./EndorsementsSection";
 import FaqSection from "./FaqSection";
 
 export default async function Home() {
+  const [
+    hero,
+    process,
+    processSteps,
+    criteria,
+    faqs,
+    labels,
+    endorsements,
+    footer,
+  ] = await Promise.all([
+    sanityFetch({ query: HERO_QUERY }).then((r) => r.data as Hero | null),
+    sanityFetch({ query: PROCESS_QUERY }).then((r) => r.data as Process | null),
+    sanityFetch({ query: PROCESS_STEPS_QUERY }).then((r) => r.data as ProcessStep[]),
+    sanityFetch({ query: CRITERIA_QUERY }).then((r) => r.data as Criterion[]),
+    sanityFetch({ query: FAQ_QUERY }).then((r) => r.data as Faq[]),
+    sanityFetch({ query: LABEL_QUERY }).then((r) => r.data as Label[]),
+    sanityFetch({ query: ENDORSEMENT_QUERY }).then((r) => r.data as Endorsement[]),
+    sanityFetch({ query: FOOTER_QUERY }).then((r) => r.data as Footer | null),
+  ]);
   return (
     <>
       <header className={styles.topbar}>
