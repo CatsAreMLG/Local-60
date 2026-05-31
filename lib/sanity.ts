@@ -17,15 +17,18 @@ export type Label = { _id: string; label: string; value: string };
 export type Faq = { _id: string; question: string; answer: string };
 export type Position = { _id: string; yes: boolean; position: string };
 export type Tier = { _id: string; label: string; value: string };
+export type image = { _id: string; url: string };
 export type Endorsement = {
   _id: string;
   tier: Tier;
+  portrait: image;
   race: string;
   name: string;
   office: string;
   initials: string;
   pull: string;
   why: string;
+  endorsed: boolean;
   positions: Position[];
 };
 export type Footer = { text: string };

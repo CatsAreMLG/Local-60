@@ -1,8 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { type Label, type Endorsement } from "@/lib/sanity";
+
 import styles from "./page.module.css";
+import defaultPortrait from "@/public/default.png";
 
 export default function EndorsementsSection({
   labels,
@@ -101,13 +104,24 @@ export default function EndorsementsSection({
       {openDetail && (
         <section className={styles.detail} ref={detailRef}>
           <div className={styles.detailInner}>
-            <div className={styles.detailPhoto}>{openDetail.initials}</div>
+            <div className={styles.detailPhoto}>
+              {openDetail.portrait ? (
+                <Image
+                  src={openDetail.portrait.url}
+                  alt="Picture of the candidate"
+                  width={200}
+                  height={240}
+                />
+              ) : (
+                openDetail.initials
+              )}
+            </div>
             <div>
               <div className={styles.detailTier}>{openDetail.tier?.label}</div>
               <h3>{openDetail.name}</h3>
               <div className={styles.detailOffice}>{openDetail.office}</div>
               <div className={styles.detailSection}>
-                <h4>Why we endorsed</h4>
+                <h4>Why we {openDetail.endorsed ? "endorsed" : "support"}</h4>
                 <p>{openDetail.why}</p>
               </div>
               <div className={styles.detailSection}>
